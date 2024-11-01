@@ -25,6 +25,7 @@ jobs:
 
       - name: Initialize Go Modules
         run: |
+          go mod init 
           go mod tidy
 
       - name: Build for ${{ matrix.goarch }}
