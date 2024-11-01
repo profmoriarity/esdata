@@ -8,6 +8,7 @@ import (
     "log"
     "os"
     "strings"
+    "sync"
     "time"
 
     "github.com/elastic/go-elasticsearch/v8"
@@ -39,6 +40,20 @@ func insertDocument(es *elasticsearch.Client, index string, doc Document) error 
     return nil
 }
 
+func worker(es *elasticsearch.Client, index string, toolName string, lines <-chan string, wg *sync.WaitGroup) {
+    defer wg.Done()
+    for line := range lines {
+        doc := Document{
+            Date:     time.Now().Format(time.RFC3339),
+            Output:   line,
+            ToolName: toolName,
+        }
+        if err := insertDocument(es, index, doc); err != nil {
+            log.Printf("Failed to insert document: %s", err)
+        }
+    }
+}
+
 func main() {
     // Define flags
     esHost := flag.String("es_host", "http://localhost:9200", "Elasticsearch host URL")
@@ -47,6 +62,7 @@ func main() {
     indexName := flag.String("indexname", "my-index", "Elasticsearch index name")
     tool := flag.String("tool", "tool", "Tool name")
     testFlag := flag.Bool("test", false, "Test Elasticsearch connection")
+    numWorkers := flag.Int("workers", 5, "Number of concurrent workers")
 
     flag.Parse()
 
@@ -81,24 +97,27 @@ func main() {
         return
     }
 
-    // For normal execution, read from stdin and insert each line as a document
+    // Create a channel to send lines to workers
+    lines := make(chan string)
+    var wg sync.WaitGroup
+
+    // Start the worker pool
+    for i := 0; i < *numWorkers; i++ {
+        wg.Add(1)
+        go worker(es, *indexName, *tool, lines, &wg)
+    }
+
+    // Read from stdin and send lines to the workers immediately
     scanner := bufio.NewScanner(os.Stdin)
     for scanner.Scan() {
-        line := scanner.Text()
-        doc := Document{
-            Date:     time.Now().Format(time.RFC3339),
-            Output:   line,
-            ToolName: *tool,
-        }
-
-        err := insertDocument(es, *indexName, doc)
-        if err != nil {
-            log.Printf("Failed to insert document: %s", err)
-        }
+        lines <- scanner.Text()
     }
+    close(lines) // Close channel to signal workers to finish
+
+    // Wait for all workers to complete
+    wg.Wait()
 
     if err := scanner.Err(); err != nil {
         log.Fatalf("Error reading from stdin: %s", err)
     }
 }
-
