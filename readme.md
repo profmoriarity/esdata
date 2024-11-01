@@ -42,3 +42,7 @@ Usage of ./esdata-amd64:
 ```
 echo "Sample log entry" | ./esdata --es_host "http://localhost:9200" --username "admin" --password "admin" --indexname "logs" --tool "myTool"
 ```
+
+## Esdata Example
+
+<img width="1159" alt="image" src="https://github.com/user-attachments/assets/ccd32ba0-9168-4d17-b49d-02c2ae4cc79c">
