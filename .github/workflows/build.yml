@@ -1,6 +1,5 @@
 name: Build for Linux Architectures
 
-
 on:
   push:
     branches:
@@ -31,13 +30,16 @@ jobs:
 
       - name: Build for ${{ matrix.goarch }}
         run: |
+          mkdir -p bin
           CGO_ENABLED=0 GOOS=$GOOS GOARCH=${{ matrix.goarch }} go build -o bin/esdata-${{ matrix.goarch }} main.go
 
-      - name: Upload build artifacts
+      # This step is added after all builds are done
+      - name: Upload all build artifacts
+        if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: esdata-${{ matrix.goarch }}
-          path: bin/esdata-${{ matrix.goarch }}
+          name: esdata-all-architectures
+          path: bin/
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
@@ -46,4 +48,6 @@ jobs:
           prerelease: false
           title: "latest"
           files: |
-            esdata-${{ matrix.goarch }}
+            bin/esdata-amd64
+            bin/esdata-arm64
+            bin/esdata-386
