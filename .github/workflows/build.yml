@@ -38,5 +38,5 @@ jobs:
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: elasticsearch-inserter-${{ matrix.goarch }}
-          path: bin/elasticsearch-inserter-${{ matrix.goarch }}
+          name: esdata-${{ matrix.goarch }}
+          path: bin/esdata-${{ matrix.goarch }}
