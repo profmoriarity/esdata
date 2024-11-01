@@ -1,25 +1,23 @@
-# esdata
+# 🚀 esdata: CLI Tool for Elasticsearch Data Ingestion
 
-`esdata` is a CLI tool written in Go for inserting data into an Elasticsearch index. It reads input from standard input (`stdin`), formats each line into JSON, and stores it in the specified Elasticsearch index. This tool supports multi-threaded ingestion for efficient processing and allows for a custom tool name.
+`esdata` is a CLI tool, built in Go, for inserting data into an Elasticsearch index. It reads from `stdin`, formats each line into JSON, and stores it in the specified Elasticsearch index. With multi-threaded support, it’s designed for efficiency! 🏎️
 
-## Features
+## ✨ Key Features
 
-- **Multi-threaded Ingestion**: Inserts data concurrently into Elasticsearch.
-- **Customizable Tool Name**: Optionally specify a tool name (default: `"tool"`).
-- **Connection Testing**: Use the `--test` flag to verify the Elasticsearch connection by inserting sample data.
-- **Cross-Platform Support**: Binaries available for multiple Linux architectures (amd64, arm64, 386).
+- **⚡ Multi-threaded Ingestion**: Concurrently inserts data into Elasticsearch for faster processing.
+- **🔧 Customizable Tool Name**: Optionally specify a tool name (default: `"tool"`).
+- **🔍 Connection Testing**: Use the `--test` flag to verify the Elasticsearch connection by inserting sample data.
+- **💻 Cross-Platform Support**: Binaries available for multiple Linux architectures (amd64, arm64, 386).
 
+## 🐳 Docker (Recommended)
 
-### Docker (Recommended)
-
-To build and run `esdata` using Docker:
+Build and run `esdata` using Docker:
 
 ```bash
 docker build -t esdata .
 ```
 
-
-Help menu - tool supports following options.
+## 🔧 Usage
 
 ```
 Usage of ./esdata-amd64:
@@ -37,12 +35,13 @@ Usage of ./esdata-amd64:
         Elasticsearch username
 ```
 
-## Exmaple command
+## 🚀 Example Command
+
 
 ```
 echo "Sample log entry" | ./esdata --es_host "http://localhost:9200" --username "admin" --password "admin" --indexname "logs" --tool "myTool"
 ```
 
-## Esdata Example
+## 🖼️ Example Output
 
 <img width="1159" alt="image" src="https://github.com/user-attachments/assets/ccd32ba0-9168-4d17-b49d-02c2ae4cc79c">
