@@ -23,6 +23,10 @@ jobs:
         with:
           go-version: '1.21'  # Specify your Go version
 
+      - name: Download dependencies
+        run: |
+          go mod download
+
       - name: Build for ${{ matrix.goarch }}
         run: |
           CGO_ENABLED=0 GOOS=$GOOS GOARCH=${{ matrix.goarch }} go build -o bin/esdata-${{ matrix.goarch }} main.go
