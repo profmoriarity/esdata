@@ -25,12 +25,12 @@ jobs:
 
       - name: Initialize Go Modules
         run: |
-          go mod init github.com/yourusername/elasticsearch-inserter
+          go mod init github.com/yourusername/esdata
           go mod tidy  # This will ensure dependencies are downloaded and go.sum is created
 
       - name: Build for ${{ matrix.goarch }}
         run: |
-          CGO_ENABLED=0 GOOS=$GOOS GOARCH=${{ matrix.goarch }} go build -o bin/elasticsearch-inserter-${{ matrix.goarch }} main.go
+          CGO_ENABLED=0 GOOS=$GOOS GOARCH=${{ matrix.goarch }} go build -o bin/esdata-${{ matrix.goarch }} main.go
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -51,6 +51,6 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: bin/elasticsearch-inserter-${{ matrix.goarch }}
-          asset_name: elasticsearch-inserter-${{ matrix.goarch }}
+          asset_path: bin/esdata-${{ matrix.goarch }}
+          asset_name: esdata-${{ matrix.goarch }}
           asset_content_type: application/octet-stream
